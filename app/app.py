@@ -10,16 +10,17 @@ def get_users_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route('/signup',methods = ['POST'])
-def signup():
-    user_name = request.form.get('new_user_id')
+@app.route('/signup',methods = ['GET'])
+def send_user_info():
+    user_name = request.form.get('new_user_name')
     password = request.form.get('new_password')
     #db connect
     conn = get_users_db_connection()
 
     try:
         conn.execute (
-            'insert into users (user_name,password) values (user_name,password)'
+            'insert into users (username,login_password) values (?,?)',
+            (user_name,password)
         )
         conn.commit()
     except sqlite3.IntegrityError:
@@ -29,13 +30,15 @@ def signup():
     return redirect('/')
 
 
-
-
-
-
 @app.route('/')
 def index():
     return render_template("index.html")
 
+
+@app.route('/signup_page')  # ブラウザで叩くURL
+def signup_page():
+    return render_template("signup.html")
+
 if __name__ == "__main__":
     app.run(debug=True)
+
