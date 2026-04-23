@@ -10,7 +10,7 @@ def get_users_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route('/signup',methods = ['GET'])
+@app.route('/signup',methods = ['POST'])
 def send_user_info():
     user_name = request.form.get('new_user_name')
     password = request.form.get('new_password')
@@ -19,7 +19,7 @@ def send_user_info():
 
     try:
         conn.execute (
-            'insert into users (username,login_password) values (?,?)',
+            'insert into users (user_name,password) values (?,?)',
             (user_name,password)
         )
         conn.commit()
